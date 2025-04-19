@@ -49,6 +49,7 @@ defmodule A2aAgentWeb.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:bandit, "~> 1.0"},
       {:prometheus_ex, "~> 3.0"},
       {:prometheus_plugs, "~> 1.1"},
       {:opentelemetry, "~> 1.4"},
