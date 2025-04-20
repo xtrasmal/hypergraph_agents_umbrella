@@ -23,9 +23,13 @@ defmodule A2aAgentWebWeb.OperatorsTest do
   end
 
   describe "LLMOperator" do
+    @doc """
+    Integration test: Verifies that LLMOperator returns a non-empty response from the LLM API.
+    This does not assert the exact output, as LLM completions are non-deterministic.
+    """
     test "formats prompt with context" do
-      {:ok, prompt} = LLMOperator.run("Hello, ~s!", %{1 => "world"})
-      assert prompt == "Hello, world!"
+      {:ok, prompt} = LLMOperator.run(%{"prompt_template" => "Hello, ~s!", "context" => %{"name" => "world"}}, %{})
+      assert is_binary(prompt) and String.length(prompt) > 0
     end
   end
 

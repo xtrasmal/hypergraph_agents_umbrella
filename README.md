@@ -21,20 +21,103 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - **A2A protocol** for secure, structured agent messaging and negotiation
 - **Distributed event streaming** (NATS, Phoenix PubSub)
 - **Workflow engine** for graph-based, parallel, and sequential execution
+- **Workflow parsing and Control Flow Graph (CFG) support** for ingesting LLM-generated or hand-written workflow specs (see below)
 - **Multi-language agent support** (Elixir, Python, more coming)
 - **Observability** (Prometheus, OpenTelemetry, structured logging)
 - **Robust developer experience** with clear APIs, tests, and docs
 
 ---
 
+## Quick Start
+
+Get up and running quickly with the following steps:
+
+### 1. Clone & Install
+```sh
+git clone <this-repo-url>
+cd hypergraph_agents_umbrella
+```
+
+### 2. Start Elixir Agent
+```sh
+cd apps/a2a_agent_web
+mix deps.get
+mix phx.server
+```
+
+### 3. Start Python Agent
+```sh
+cd agents/python_agents/minimal_a2a_agent
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 5001
+```
+
+---
+
+## Developer Tools
+
+A set of tools and scripts to streamline development, automation, and onboarding.
+
+### Mix Generators
+
+Automate common tasks in `apps/a2a_agent_web`:
+
+#### Operator Generator
+- **Usage:**
+  ```sh
+  cd apps/a2a_agent_web
+  mix a2a.gen.operator MyNewOperator
+  ```
+- **Creates:**
+  - `lib/a2a_agent_web_web/operators/my_new_operator.ex` — Starter operator module
+  - `test/a2a_agent_web_web/operators/my_new_operator_test.exs` — Matching ExUnit test file
+
+#### Workflow Generator
+- **Usage:**
+  ```sh
+  cd apps/a2a_agent_web
+  mix a2a.gen.workflow my_workflow
+  ```
+- **Creates:**
+  - `workflows/my_workflow.yaml` — Starter workflow YAML file with helpful comments
+
+See [apps/a2a_agent_web/README.md](apps/a2a_agent_web/README.md#mix-generators) for details and onboarding quickstart.
+
+### Makefile & Scripts
+
+- `make up` / `make down`: Start/stop the stack (Elixir, Python, NATS, etc.)
+- `make test`, `make lint`: Run all tests, lint code
+- Manual: `cd apps/a2a_agent_web && mix test`, `mix format`, etc.
+
+### API Docs
+
+- OpenAPI schema: [openapi.yaml](apps/a2a_agent_web/openapi.yaml)
+- Use [Swagger Editor](https://editor.swagger.io/) to view/test.
+
+### Troubleshooting
+
+- NATS not running? See [README_NATS.md](apps/a2a_agent_web/README_NATS.md)
+- Metrics not showing? See `/metrics` endpoint and Prometheus config
+- Common errors: See logs for `[EventBus]`, `[A2A]`, and `[LLMOperator]` messages
+- Docker issues: `docker compose logs` and `docker compose ps`
+
+---
+
 ## Table of Contents
 - [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Developer Tools](#developer-tools)
+  - [Mix Generators](#mix-generators)
+  - [Makefile & Scripts](#makefile--scripts)
+  - [API Docs](#api-docs)
+  - [Troubleshooting](#troubleshooting)
 - [Directory Structure](#directory-structure)
 - [Architecture](#architecture)
-- [Quick Start](#quick-start)
-- [DevOps & Local Development](#devops--local-development)
 - [Multi-Language Agent Support](#multi-language-agent-support)
 - [A2A Protocol: Message Schema](#a2a-protocol-message-schema)
+- [Workflow Parsing & CFG Support](#workflow-parsing--cfg-support)
 - [API Examples](#api-examples)
 - [Contributing](#contributing)
 - [License](#license)
@@ -50,7 +133,7 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - **[A2A Agent Umbrella](a2a_agent_umbrella/README.md)** — Umbrella project management
 - **[A2A Agent (core)](a2a_agent_umbrella/apps/a2a_agent/README.md)** — Elixir agent protocol logic
 - **[A2A Agent Web](a2a_agent_umbrella/apps/a2a_agent_web/README.md)** — Phoenix API (endpoints: `/api/story`, `/api/summarize`, `/api/a2a`, `/metrics`, `/status`)
-- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine
+- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine, **now with workflow parser and Control Flow Graph (CFG) support**
 - **[HypergraphAgent](apps/hypergraph_agent/README.md)** — Orchestrator and workflow manager
 - **[Operator](apps/operator/README.md)** — Operator library (LLM, Map, Sequence, Parallel)
 - **[Minimal Python Agent](agents/python_agents/minimal_a2a_agent/README.md)** — Python FastAPI reference agent
@@ -61,9 +144,39 @@ See each README for detailed usage, architecture, and API documentation.
 
 ---
 
-## Developer Goodies
+## Developer Tools
 
 ### OpenAPI/Swagger Docs
+
+---
+
+## Mix Generators
+
+The umbrella project provides Mix generators in the `apps/a2a_agent_web` app to automate common developer tasks:
+
+### Operator Generator
+- **Usage:**
+  ```sh
+  cd apps/a2a_agent_web
+  mix a2a.gen.operator MyNewOperator
+  ```
+- **Creates:**
+  - `lib/a2a_agent_web_web/operators/my_new_operator.ex` — Starter operator module
+  - `test/a2a_agent_web_web/operators/my_new_operator_test.exs` — Matching ExUnit test file
+
+### Workflow Generator
+- **Usage:**
+  ```sh
+  cd apps/a2a_agent_web
+  mix a2a.gen.workflow my_workflow
+  ```
+- **Creates:**
+  - `workflows/my_workflow.yaml` — Starter workflow YAML file with helpful comments
+
+See [apps/a2a_agent_web/README.md](apps/a2a_agent_web/README.md#mix-generators) for detailed instructions, examples, and onboarding quickstart.
+
+---
+
 - **OpenAPI schema:** [openapi.yaml](a2a_agent_umbrella/apps/a2a_agent_web/openapi.yaml)
 - Use [Swagger Editor](https://editor.swagger.io/) to visualize or test the API.
 
@@ -132,6 +245,8 @@ For more, see the [Contributing](#contributing) section and individual app READM
 
 ## Directory Structure
 
+A modular monorepo with clear separation of concerns:
+
 ```
 hypergraph_agents_umbrella/
   agents/
@@ -147,6 +262,8 @@ hypergraph_agents_umbrella/
 ---
 
 ## Architecture
+
+The system is designed for extensibility, parallel execution, and multi-language agent orchestration.
 
 ```mermaid
 graph TD;
@@ -168,10 +285,6 @@ graph TD;
   User --> A2A
   User --> PyAgent
 ```
-
----
-
-## More Diagrams
 
 ### Event Streaming Sequence Diagram
 
@@ -199,6 +312,217 @@ sequenceDiagram
     AgentA->>AgentB: POST /api/agent_card (register)
     AgentB-->>AgentA: Status OK
 ```
+
+---
+
+## Multi-Language Agent Support
+
+Supports both Elixir and Python agents for full interoperability and distributed workflows.
+
+- **Elixir Agent:** Full-featured, with A2A protocol, registry, event streaming, metrics, and workflow engine.
+- **Python Agent:** Minimal, A2A-compliant FastAPI implementation for interoperability and testing.
+  - See [`agents/python_agents/minimal_a2a_agent/README.md`](agents/python_agents/minimal_a2a_agent/README.md) for details.
+
+Agents can register with each other via `/api/agent_card` and exchange A2A messages via `/api/a2a` (supports streaming).
+
+---
+
+## A2A Protocol: Message Schema
+
+Defines the message structure for agent-to-agent (A2A) communication.
+
+| Field      | Type     | Required | Description                                 | Example                |
+|------------|----------|----------|---------------------------------------------|------------------------|
+| type       | atom     | Yes      | Message type (`:task_request`, `:result`, `:status_update`, `:agent_discovery`, `:negotiation`) | `"task_request"`       |
+| sender     | string   | Yes      | Agent ID or card                            | `"agent1"`             |
+| recipient  | string   | Yes      | Agent ID or card                            | `"agent2"`             |
+| payload    | map      | Yes      | Message-specific data (see below)           | `%{graph: ..., ...}`   |
+| task_id    | string   | No       | Task identifier                             | `"task-123"`           |
+| timestamp  | string   | No       | ISO8601 timestamp                           | `"2025-04-19T01:40:00Z"`|
+
+#### Example: Task Request
+
+```json
+{
+  "type": "task_request",
+  "sender": "agent1",
+  "recipient": "agent2",
+  "payload": {
+    "graph": { "nodes": [], "edges": [] },
+    "agent_map": {},
+    "input": {}
+  },
+  "task_id": "task-123",
+  "timestamp": "2025-04-19T01:40:00Z"
+}
+```
+
+#### Example: Agent Discovery
+
+```json
+{
+  "type": "agent_discovery",
+  "sender": "agent1",
+  "recipient": "agent2",
+  "payload": {}
+}
+```
+**Stub Response:**
+```json
+{
+  "status": "ok",
+  "info": "Agent discovery message received (stub)"
+}
+```
+
+#### Example: Negotiation
+
+```json
+{
+  "type": "negotiation",
+  "sender": "agent1",
+  "recipient": "agent2",
+  "payload": {"proposal": "foo", "details": {}}
+}
+```
+**Stub Response:**
+```json
+{
+  "status": "ok",
+  "info": "Negotiation message received (stub)"
+}
+```
+
+#### Error Response Example
+
+```json
+{
+  "status": "error",
+  "error": "Missing required fields: type, sender, recipient, payload"
+}
+```
+
+#### Endpoints
+
+- `GET /api/agent_card`: Returns agent metadata for discovery.
+- `POST /api/a2a`: Receives an A2A message, validates it, and triggers agent orchestration. Returns results or errors as JSON.
+
+---
+
+## Workflow Parsing & CFG Support
+
+Supports parsing and validation of workflow definitions, including LLM-generated YAML and strict DSLs.
+
+- **Flexible YAML Parsing:** Extracts nodes, edges, and parameters for workflow execution.
+- **CFG (Control Flow Graph) Support:** Enables advanced orchestration and validation.
+- **NimbleParsec-based DSL:** For strict, extensible workflow definitions.
+
+---
+
+## API Examples
+
+A few common API requests for agent registration, task execution, and error handling.
+
+### Register Python Agent with Elixir (cURL)
+```sh
+curl -X POST http://localhost:4000/api/agent_card \
+  -H "Content-Type: application/json" \
+  -d @agents/python_agents/minimal_a2a_agent/agent_card.json
+```
+
+### Send A2A Task Request (Python)
+```python
+import httpx
+msg = {
+    "type": "task_request",
+    "sender": "pyagent1",
+    "recipient": "agent1",
+    "payload": {"task_id": "t1", "stream": True}
+}
+r = httpx.post("http://localhost:4000/api/a2a", json=msg)
+print(r.json())
+```
+
+### Send A2A Task Request (Elixir)
+```elixir
+msg = %{
+  type: "task_request",
+  sender: "agent1",
+  recipient: "pyagent1",
+  payload: %{task_id: "t1", stream: true}
+}
+HTTPoison.post!("http://localhost:5001/api/a2a", Jason.encode!(msg), ["Content-Type": "application/json"])
+```
+
+### Streaming Task Progress (cURL)
+```sh
+curl -N -X POST http://localhost:5001/api/a2a \
+  -H "Content-Type: application/json" \
+  -d '{"type": "task_request", "sender": "agent1", "recipient": "pyagent1", "payload": {"task_id": "t1", "stream": true}}'
+```
+
+### Agent Discovery (Python)
+```python
+import httpx
+msg = {
+    "type": "agent_discovery",
+    "sender": "agent1",
+    "recipient": "pyagent1",
+    "payload": {}
+}
+r = httpx.post("http://localhost:5001/api/a2a", json=msg)
+print(r.json())
+```
+
+### Error Handling Example (Elixir)
+```elixir
+msg = %{type: nil, sender: "agent1", recipient: "pyagent1", payload: %{}}
+HTTPoison.post!("http://localhost:5001/api/a2a", Jason.encode!(msg), ["Content-Type": "application/json"])
+# => Returns 400 with error message
+```
+
+---
+
+## Contributing
+
+We welcome contributions! To get started:
+- Fork the repo and create a feature branch
+- Follow our [coding standards](.ai/rules/python-dev.md) and use type annotations, docstrings, and tests
+- Use `make lint` and `make test` before submitting a PR
+- For major changes, open an issue to discuss first
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines (if present)
+
+### Advanced Guidelines
+- All Python and Elixir code must use typing annotations and descriptive docstrings (PEP257 for Python).
+- All new features and bugfixes require tests. Use `pytest` for Python and `mix test` for Elixir.
+- Place all tests in `/test` or `/tests` directories and ensure they are fully type-annotated.
+- Use `ruff` for Python linting and `mix format` for Elixir formatting.
+- Document new endpoints or protocol changes in the relevant Markdown files.
+- All configuration should use environment variables and be documented in the README or `docs/configuration.md`.
+- Major changes should be discussed in an issue before submitting a PR.
+- See `.ai/rules/python-dev.md` for AI-friendly coding practices and contribution rules.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Project Structure & Subproject READMEs
+
+- **[A2A Agent Umbrella](a2a_agent_umbrella/README.md)** — Umbrella project management
+- **[A2A Agent (core)](a2a_agent_umbrella/apps/a2a_agent/README.md)** — Elixir agent protocol logic
+- **[A2A Agent Web](a2a_agent_umbrella/apps/a2a_agent_web/README.md)** — Phoenix API (endpoints: `/api/story`, `/api/summarize`, `/api/a2a`, `/metrics`, `/status`)
+- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine, **now with workflow parser and Control Flow Graph (CFG) support**
+- **[HypergraphAgent](apps/hypergraph_agent/README.md)** — Orchestrator and workflow manager
+- **[Operator](apps/operator/README.md)** — Operator library (LLM, Map, Sequence, Parallel)
+- **[Minimal Python Agent](agents/python_agents/minimal_a2a_agent/README.md)** — Python FastAPI reference agent
+- **[Goldrush Event System](apps/a2a_agent_web/README_GOLDRUSH.md)** — Event/telemetry integration
+- **[NATS Integration](apps/a2a_agent_web/README_NATS.md)** — Event streaming and distributed messaging
+
+See each README for detailed usage, architecture, and API documentation.
 
 ---
 

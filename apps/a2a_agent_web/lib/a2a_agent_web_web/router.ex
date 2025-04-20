@@ -25,6 +25,9 @@ defmodule A2aAgentWebWeb.Router do
     # Orchestration endpoint
     post "/a2a", AgentController, :a2a
 
+    # Simulation endpoint
+    post "/simulate_workflow", SimulationController, :simulate
+
     # Summarization endpoint
     post "/summarize", SummarizerController, :summarize
     post "/story", StoryController, :create

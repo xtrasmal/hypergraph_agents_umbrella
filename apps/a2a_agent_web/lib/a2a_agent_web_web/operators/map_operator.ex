@@ -8,4 +8,10 @@ defmodule A2aAgentWebWeb.Operators.MapOperator do
   def run(input, fun) when is_function(fun, 1) do
     fun.(input)
   end
+
+  @doc """
+  Pass-through operator for workflow engine compatibility. Returns params unchanged.
+  """
+  @spec call(map()) :: map()
+  def call(params), do: params
 end

@@ -61,4 +61,14 @@ A Mix umbrella project allows you to manage multiple interdependent Elixir apps 
 
 ---
 
+## Design Inspiration: Wing Chun Trihedron Geometry
+
+This project’s core graph and workflow design draws inspiration from Wing Chun martial art geometry—specifically the use of the **trihedron** (three-pointed structure) pointed both up and down. This form is used in Wing Chun to represent balance, centerline, and dynamic flow, and is reflected in the way agent workflows and hypergraph topologies are structured here. The trihedron provides:
+
+- **Balance and symmetry** in workflow design
+- **Clear directional flow** (upward and downward propagation of tasks/data)
+- **Strong, modular interconnections** between nodes (agents/operators)
+
+This geometric inspiration helps ensure that the system is both robust and adaptable, mirroring the principles of Wing Chun in computational form.
+
 For architecture, usage, and API details, see the main [README](../README.md).

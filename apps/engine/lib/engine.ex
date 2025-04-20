@@ -62,7 +62,10 @@ defmodule Engine do
       op = graph[node][:operator]
       spec = Map.get(graph[node], :specification)
       dep_outputs = Enum.map(graph[node][:deps], &acc[&1])
-      node_input = Map.merge(input, Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
+      node_params = Map.get(graph[node], :params, %{})
+      node_input =
+        node_params
+        |> Map.merge(Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
       validated_input =
         case spec do
           nil -> node_input
@@ -72,7 +75,7 @@ defmodule Engine do
               {:error, reason} -> raise "Input validation failed for node #{inspect(node)}: #{inspect(reason)}"
             end
         end
-      node_output = op.call(validated_input)
+      node_output = op.call(validated_input) |> unwrap_ok_and_wrap_map()
       _ =
         case spec do
           nil -> :ok
@@ -87,6 +90,14 @@ defmodule Engine do
   end
 
   @doc """
+  Unwraps {:ok, value} to value, and wraps non-map values as %{result: value} for engine merging.
+  """
+  @spec unwrap_ok_and_wrap_map(any()) :: map()
+  defp unwrap_ok_and_wrap_map({:ok, value}), do: unwrap_ok_and_wrap_map(value)
+  defp unwrap_ok_and_wrap_map(map) when is_map(map), do: map
+  defp unwrap_ok_and_wrap_map(other), do: %{result: other}
+
+  @doc """
   Executes the graph in parallel by levels (nodes with no dependencies run together).
   """
   @spec exec_parallel(graph(), [node_id()], input()) :: %{node_id() => output()}
@@ -98,7 +109,10 @@ defmodule Engine do
           op = graph[node][:operator]
           spec = Map.get(graph[node], :specification)
           dep_outputs = Enum.map(graph[node][:deps], &acc[&1])
-          node_input = Map.merge(input, Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
+          node_params = Map.get(graph[node], :params, %{})
+          node_input =
+            node_params
+            |> Map.merge(Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
           validated_input =
             case spec do
               nil -> node_input
@@ -108,7 +122,7 @@ defmodule Engine do
                   {:error, reason} -> raise "Input validation failed for node #{inspect(node)}: #{inspect(reason)}"
                 end
             end
-          node_output = op.call(validated_input)
+          node_output = op.call(validated_input) |> unwrap_ok_and_wrap_map()
           _ =
             case spec do
               nil -> :ok
