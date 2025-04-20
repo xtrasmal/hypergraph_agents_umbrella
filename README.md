@@ -1,17 +1,30 @@
 
 
+# Hypergraph Agents Umbrella
+
+Multi-language, high-performance agentic AI framework for distributed workflows.
+
 [![CI](https://img.shields.io/github/actions/workflow/status/jmanhype/hypergraph_agents_umbrella/ci.yml?style=flat-square)](https://github.com/jmanhype/hypergraph_agents_umbrella/actions)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](#)
 [![Docs](https://img.shields.io/badge/docs-hexdocs.io-blue?style=flat-square)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-> **Multi-language, high-performance agentic AI framework for distributed workflows.**
+---
+
+## Overview
+
+**Hypergraph Agents** is a modular, distributed AI workflow framework supporting Elixir, Python, and more. It enables teams to build, orchestrate, and observe complex agentic workflows—ideal for enterprises seeking scalable, auditable, and extensible AI solutions.
+
+<p align="center">
+  <img src="https://github.com/jmanhype/hypergraph_agents_umbrella/raw/main/2025-04-20%2013.29.32.jpg" alt="Keylon Partiki Pattern" width="350" />
+</p>
+<p align="center"><em>Keylon Partiki Pattern – Symbolizing distributed intelligence and interconnected workflows</em></p>
 
 ---
 
 # 📚 Table of Contents
-- [Showcase: All the Pieces](#showcase-all-the-pieces)
-  - [Project Architecture](#project-architecture)
+- [Project Overview](#project-overview)
+  - [Architecture](#architecture)
   - [A2A Protocol: Agent Communication](#a2a-protocol-agent-communication)
   - [Workflow Engine (XCS)](#workflow-engine-xcs)
   - [Operators: Plug & Play AI](#operators-plug--play-ai)
@@ -36,9 +49,9 @@
 
 ---
 
-# 🚩 Showcase: All the Pieces
+# 🚩 Project Overview
 
-## Project Architecture
+## Architecture
 
 ```mermaid
 graph TD
