@@ -1,4 +1,237 @@
-# ⚡️ Hypergraph Agents: Build Next-Gen AI Workflows
+# ⚡️ Hypergraph Agents: Distributed, Multi-Language Agent Workflows
+
+[![CI](https://img.shields.io/github/actions/workflow/status/jmanhype/hypergraph_agents_umbrella/ci.yml?style=flat-square)](https://github.com/jmanhype/hypergraph_agents_umbrella/actions)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](#)
+[![Docs](https://img.shields.io/badge/docs-hexdocs.io-blue?style=flat-square)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+
+> **A multi-language, high-performance agentic AI framework for distributed workflows and A2A (Agent-to-Agent) communication in Elixir and Python.**
+
+---
+
+## 📚 Table of Contents
+- [Why Hypergraph Agents?](#-why-hypergraph-agents)
+- [Quick Start](#-quick-start)
+- [Remixable Workflows](#-remixable-workflows)
+- [Operators: Add Your Own AI](#-operators-add-your-own-ai)
+- [A2A Protocol: Agent Communication](#-a2a-protocol-agent-communication)
+- [Developer Experience](#-developer-experience)
+- [API Examples](#-api-examples)
+- [Directory Structure](#-directory-structure)
+- [Architecture](#-architecture)
+- [Multi-Language Agent Support](#-multi-language-agent-support)
+- [Observability & DevOps](#-observability--devops)
+- [Contributing](#-contributing)
+- [Learn More](#-learn-more)
+- [License](#-license)
+
+---
+
+## 🚀 Why Hypergraph Agents?
+
+- **Plug & Play AI:** Instantly connect Elixir & Python agents.
+- **Workflow DSL:** Write, run, remix—YAML or Elixir, your call.
+- **A2A Protocol:** Agents talk, negotiate, and collaborate.
+- **Event Streaming:** Real-time, distributed, and fast (NATS, PubSub).
+- **Observability:** Metrics, logs, dashboards—built in.
+- **Zero-BS Onboarding:** Clone, run, remix. Done.
+
+---
+
+## 🏁 Quick Start
+
+```sh
+git clone https://github.com/jmanhype/hypergraph_agents_umbrella.git
+cd hypergraph_agents_umbrella
+make up   # Or: docker compose up --build
+```
+
+- Elixir API: http://localhost:4000
+- Python Agent: http://localhost:5001
+- Metrics: http://localhost:4000/metrics
+
+---
+
+## 🧩 Remixable Workflows
+
+- **YAML or Elixir:**
+  - `workflows/summarize_and_analyze.yaml`
+  - `workflows/summarize_and_analyze.exs`
+- **Generate your own:**
+  - `mix a2a.gen.workflow my_workflow`
+- **Run it:**
+  - `mix workflow.run workflows/summarize_and_analyze.yaml`
+
+---
+
+## ⚙️ Operators: Add Your Own AI
+
+- **Generate a new operator:**
+  ```sh
+  mix a2a.gen.operator MyOperator
+  ```
+- **Drop in your logic:**
+  - `lib/a2a_agent_web_web/operators/my_operator.ex`
+- **Test it:**
+  - `mix test`
+
+---
+
+## 🌐 A2A Protocol: Agent Communication
+
+Agents send, receive, and negotiate tasks via a simple, powerful protocol:
+
+```json
+{
+  "type": "task_request",
+  "sender": "agent1",
+  "recipient": "agent2",
+  "payload": { "graph": { "nodes": [], "edges": [] } }
+}
+```
+- `POST /api/a2a` — Send messages, trigger workflows, negotiate.
+- Works across Elixir, Python, and beyond.
+
+---
+
+## 🛠️ Developer Experience
+
+- **Makefile Shortcuts:** `make up`, `make test`, `make lint`
+- **Live reload:** Phoenix & FastAPI
+- **OpenAPI docs:** [openapi.yaml](apps/a2a_agent_web/openapi.yaml)
+- **All code is type-annotated & documented**
+
+---
+
+## 🧪 API Examples
+
+### Register Python Agent with Elixir (cURL)
+```sh
+curl -X POST http://localhost:4000/api/agent_card \
+  -H "Content-Type: application/json" \
+  -d @agents/python_agents/minimal_a2a_agent/agent_card.json
+```
+
+### Send A2A Task Request (Python)
+```python
+import httpx
+msg = {
+    "type": "task_request",
+    "sender": "pyagent1",
+    "recipient": "agent1",
+    "payload": {"task_id": "t1", "stream": True}
+}
+r = httpx.post("http://localhost:4000/api/a2a", json=msg)
+print(r.json())
+```
+
+### Send A2A Task Request (Elixir)
+```elixir
+msg = %{
+  type: "task_request",
+  sender: "agent1",
+  recipient: "pyagent1",
+  payload: %{task_id: "t1", stream: true}
+}
+HTTPoison.post!("http://localhost:5001/api/a2a", Jason.encode!(msg), ["Content-Type": "application/json"])
+```
+
+### Streaming Task Progress (cURL)
+```sh
+curl -N -X POST http://localhost:5001/api/a2a \
+  -H "Content-Type: application/json" \
+  -d '{"type": "task_request", "sender": "agent1", "recipient": "pyagent1", "payload": {"task_id": "t1", "stream": true}}'
+```
+
+---
+
+## 📂 Directory Structure
+
+```text
+hypergraph_agents_umbrella/
+  agents/
+    python_agents/
+      minimal_a2a_agent/   # Reference Python A2A agent
+  apps/
+    a2a_agent_web/        # Main Elixir A2A agent
+    engine/               # Workflow/XCS engine
+    operator/             # Operator library
+  config/                 # System config
+  ...
+```
+
+---
+
+## 🏗️ Architecture
+
+```mermaid
+graph TD
+    User --> API
+    API --> XCS
+    XCS --> Operators
+    Operators --> LLM
+    XCS --> EventBus
+    EventBus --> PythonAgent
+    PythonAgent --> API
+```
+
+- **User**: Developer or API client
+- **API**: Phoenix API (Elixir)
+- **XCS**: Execution Engine
+- **Operators**: Modular computation units
+- **LLM**: Model System (LLMs, etc.)
+- **EventBus**: NATS/PubSub
+- **PythonAgent**: Python agent process
+
+> **[Add GIF/Screenshot: Running a workflow, seeing results and metrics live]**
+
+---
+
+## 🤝 Multi-Language Agent Support
+
+- **Elixir Agent:** Full-featured, with A2A protocol, registry, event streaming, metrics, and workflow engine.
+- **Python Agent:** Minimal, A2A-compliant FastAPI implementation for interoperability and testing.
+  - See [`agents/python_agents/minimal_a2a_agent/README.md`](agents/python_agents/minimal_a2a_agent/README.md) for details.
+- Agents can register with each other via `/api/agent_card` and exchange A2A messages via `/api/a2a` (supports streaming).
+
+---
+
+## 📈 Observability & DevOps
+
+- **Prometheus metrics** at `/metrics`
+- **Grafana dashboards** for real-time monitoring
+- **Pre-configured Docker Compose** for local dev and CI
+- **Live reload**: Phoenix and FastAPI
+- **CI/CD**: GitHub Actions for both Elixir and Python agents
+
+> **[Add Screenshot/GIF: Metrics dashboard in action]**
+
+---
+
+## 🧑‍💻 Contributing
+
+We welcome contributions! To get started:
+- Fork the repo and create a feature branch
+- Follow our [coding standards](.ai/rules/python-dev.md) and use type annotations, docstrings, and tests
+- Use `make lint` and `make test` before submitting a PR
+- For major changes, open an issue to discuss first
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
+
+---
+
+## 📚 Learn More
+
+- [A2A Protocol](apps/a2a_agent_web/README.md#a2a-protocol-message-schema)
+- [Operator Library](apps/operator/README.md)
+- [Minimal Python Agent](agents/python_agents/minimal_a2a_agent/README.md)
+- [Engine & Workflow DSL](apps/engine/README.md)
+
+---
+
+## 📝 License
+
+MIT License | Built with Elixir, Python, and love.
+
 
 [![CI](https://img.shields.io/github/actions/workflow/status/jmanhype/hypergraph_agents_umbrella/ci.yml?style=flat-square)](https://github.com/jmanhype/hypergraph_agents_umbrella/actions)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](#)
