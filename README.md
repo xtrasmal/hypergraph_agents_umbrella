@@ -23,6 +23,10 @@
   - [Observability: Metrics & Dashboards](#observability-metrics--dashboards)
 - [Viral Quickstart & Usage Story](#-imagine-this)
 - [Why Hypergraph Agents?](#-why-hypergraph-agents)
+- [Enterprise Business Use Case](#-enterprise-business-use-case)
+- [How It Works: Subsystem Interoperability](#-how-it-works-subsystem-interoperability)
+- [Pro Tips](#-pro-tips)
+- [Summary Table: What You Can Do](#-summary-table-what-you-can-do)
 - [Remixable Workflows](#-remixable-workflows)
 - [Add Your Own AI](#-operators-add-your-own-ai)
 - [Dev Experience](#-dev-experience)
@@ -305,13 +309,17 @@ print(r.json())
 
 ---
 
-## 🏁 60-Second Quick Start
+# 🏢 Enterprise Business Use Case
 
-```sh
-git clone https://github.com/jmanhype/hypergraph_agents_umbrella.git
-cd hypergraph_agents_umbrella
-make up   # Or: docker compose up --build
-```
+> **Scenario:**  
+> An enterprise needs to automate compliance checks across thousands of contracts, extracting key clauses, summarizing obligations, and flagging risks using both LLMs and custom logic.
+
+<p align="center">
+  <img src="https://github.com/jmanhype/hypergraph_agents_umbrella/raw/main/2025-04-20%2013.29.32.jpg" alt="Keylon Partiki Pattern" width="350" />
+</p>
+<p align="center"><em>Keylon Partiki Pattern – Symbolizing distributed intelligence and interconnected workflows</em></p>
+
+### How Hypergraph Agents Solves This
 
 - Elixir API: http://localhost:4000
 - Python Agent: http://localhost:5001
@@ -328,6 +336,51 @@ make up   # Or: docker compose up --build
   - `mix a2a.gen.workflow my_workflow`
 - **Run it:**
   - `mix workflow.run workflows/summarize_and_analyze.yaml`
+
+### Example: Running a Workflow
+
+```sh
+mix workflow.run apps/a2a_agent_web/workflows/summarize_and_analyze.yaml
+```
+
+Sample output:
+```text
+DEBUG: YAML path: apps/a2a_agent_web/workflows/summarize_and_analyze.yaml
+DEBUG: File.exists?: true
+YAML parsed data: %{
+  "edges" => ["summarize->analyze"],
+  "nodes" => [
+    %{
+      "depends_on" => [],
+      "id" => "summarize",
+      "op" => "LLMOperator",
+      "params" => %{
+        "context" => %{"topic" => "Elixir DSLs"},
+        "prompt_template" => "Summarize: ~s"
+      }
+    },
+    %{
+      "depends_on" => ["summarize"],
+      "id" => "analyze",
+      "op" => "MapOperator",
+      "params" => %{"function" => nil}
+    }
+  ]
+}
+[info] LLMOperator.run/2 prompt: "Summarize: Elixir DSLs"
+[info] LLMOperator.run/2 sending request to OpenAI: ...
+[info] LLMOperator.run/2 OpenAI response: ...
+Workflow result:
+{
+  "analyze": {
+    "function": null,
+    "result": "Elixir DSLs (Domain Specific Languages) are specialized mini-languages written in Elixir, designed to simplify complex code and make it more expressive and easy to understand within a particular domain. ..."
+  },
+  "summarize": {
+    "result": "Elixir DSLs (Domain Specific Languages) are specialized mini-languages written in Elixir, designed to simplify complex code and make it more expressive and easy to understand within a particular domain. ..."
+  }
+}
+```
 
 ---
 
