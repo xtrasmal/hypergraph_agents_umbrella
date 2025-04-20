@@ -27,6 +27,7 @@ defmodule A2aAgentWebWeb.Router do
 
     # Summarization endpoint
     post "/summarize", SummarizerController, :summarize
+    post "/story", StoryController, :create
 
     # Health/status endpoint
     get "/status", StatusController, :status
