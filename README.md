@@ -21,6 +21,7 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - **A2A protocol** for secure, structured agent messaging and negotiation
 - **Distributed event streaming** (NATS, Phoenix PubSub)
 - **Workflow engine** for graph-based, parallel, and sequential execution
+- **Workflow parsing and Control Flow Graph (CFG) support** for ingesting LLM-generated or hand-written workflow specs (see below)
 - **Multi-language agent support** (Elixir, Python, more coming)
 - **Observability** (Prometheus, OpenTelemetry, structured logging)
 - **Robust developer experience** with clear APIs, tests, and docs
@@ -35,6 +36,7 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - [DevOps & Local Development](#devops--local-development)
 - [Multi-Language Agent Support](#multi-language-agent-support)
 - [A2A Protocol: Message Schema](#a2a-protocol-message-schema)
+- [Workflow Parsing & CFG Support](#workflow-parsing--cfg-support)
 - [API Examples](#api-examples)
 - [Contributing](#contributing)
 - [License](#license)
@@ -50,7 +52,7 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - **[A2A Agent Umbrella](a2a_agent_umbrella/README.md)** — Umbrella project management
 - **[A2A Agent (core)](a2a_agent_umbrella/apps/a2a_agent/README.md)** — Elixir agent protocol logic
 - **[A2A Agent Web](a2a_agent_umbrella/apps/a2a_agent_web/README.md)** — Phoenix API (endpoints: `/api/story`, `/api/summarize`, `/api/a2a`, `/metrics`, `/status`)
-- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine
+- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine, **now with workflow parser and Control Flow Graph (CFG) support**
 - **[HypergraphAgent](apps/hypergraph_agent/README.md)** — Orchestrator and workflow manager
 - **[Operator](apps/operator/README.md)** — Operator library (LLM, Map, Sequence, Parallel)
 - **[Minimal Python Agent](agents/python_agents/minimal_a2a_agent/README.md)** — Python FastAPI reference agent
