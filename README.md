@@ -1,11 +1,11 @@
-# ⚡️ Hypergraph Agents: Build Viral AI Workflows
+# ⚡️ Hypergraph Agents: Build Next-Gen AI Workflows
 
 [![CI](https://img.shields.io/github/actions/workflow/status/jmanhype/hypergraph_agents_umbrella/ci.yml?style=flat-square)](https://github.com/jmanhype/hypergraph_agents_umbrella/actions)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square)](#)
 [![Docs](https://img.shields.io/badge/docs-hexdocs.io-blue?style=flat-square)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-> **Multi-language, high-performance agentic AI framework for viral, distributed workflows.**
+> **Multi-language, high-performance agentic AI framework for distributed workflows.**
 
 ---
 
@@ -38,14 +38,23 @@
 
 ```mermaid
 graph TD
-    User[(User/API)] --> API[Phoenix API]
-    API --> XCS[Execution Engine (XCS)]
+    User --> API
+    API --> XCS
     XCS --> Operators
-    Operators --> LLM[LLM/Model System]
-    XCS --> EventBus[NATS/PubSub]
-    EventBus --> PythonAgent[Python Agent]
+    Operators --> LLM
+    XCS --> EventBus
+    EventBus --> PythonAgent
     PythonAgent --> API
 ```
+
+- **User**: Developer or API client
+- **API**: Phoenix API (Elixir)
+- **XCS**: Execution Engine
+- **Operators**: Modular computation units
+- **LLM**: Model System (LLMs, etc.)
+- **EventBus**: NATS/PubSub
+- **PythonAgent**: Python agent process
+
 
 > **[Add GIF/Screenshot: Running a workflow, seeing results and metrics live]**
 
@@ -96,7 +105,7 @@ graph LR
 
 ```elixir
 defmodule MyOperator do
-  @moduledoc """Custom operator for viral workflows."""
+  @moduledoc """Custom operator example."""
   def run(input, _ctx), do: String.upcase(input)
 end
 ```
