@@ -1,6 +1,10 @@
 # HypergraphAgent
 
-**TODO: Add description**
+This app is the orchestrator and workflow manager for agentic tasks in the Hypergraph Agents framework.
+
+- Coordinates execution of operators and agents
+- Manages workflow graphs and dependency resolution
+- Integrates with the Engine and Operator apps
 
 ## Installation
 

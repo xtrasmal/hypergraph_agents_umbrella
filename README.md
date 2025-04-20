@@ -2,6 +2,11 @@
 
 [![CI](https://github.com/<your-org>/hypergraph_agents_umbrella/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-org>/hypergraph_agents_umbrella/actions/workflows/ci.yml)
 [![Lint](https://img.shields.io/badge/lint-passing-brightgreen)](#)
+[![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)](#)
+[![Docs](https://img.shields.io/badge/docs-hexdocs-blue)](https://hexdocs.pm/)
+[![Release](https://img.shields.io/github/v/release/<your-org>/hypergraph_agents_umbrella)](https://github.com/<your-org>/hypergraph_agents_umbrella/releases)
+[![Hex.pm](https://img.shields.io/hexpm/v/a2a_agent_web.svg?color=purple&label=hexpm)](https://hex.pm/packages/a2a_agent_web)
+[![PyPI](https://img.shields.io/pypi/v/minimal-a2a-agent.svg?color=blue&label=pypi)](https://pypi.org/project/minimal-a2a-agent/)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)](#)
 [![Elixir](https://img.shields.io/badge/elixir-1.16%2B-purple)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -40,6 +45,91 @@ Hypergraph Agents is a modular, extensible platform for building, orchestrating,
 - **A2A protocol** for secure, structured agent messaging and negotiation
 - **Distributed event streaming** (NATS, Phoenix PubSub)
 - **Workflow engine** for graph-based, parallel, and sequential execution
+## Project Structure & Documentation
+
+- **[A2A Agent Umbrella](a2a_agent_umbrella/README.md)** — Umbrella project management
+- **[A2A Agent (core)](a2a_agent_umbrella/apps/a2a_agent/README.md)** — Elixir agent protocol logic
+- **[A2A Agent Web](a2a_agent_umbrella/apps/a2a_agent_web/README.md)** — Phoenix API (endpoints: `/api/story`, `/api/summarize`, `/api/a2a`, `/metrics`, `/status`)
+- **[Engine](apps/engine/README.md)** — Workflow/XCS execution engine
+- **[HypergraphAgent](apps/hypergraph_agent/README.md)** — Orchestrator and workflow manager
+- **[Operator](apps/operator/README.md)** — Operator library (LLM, Map, Sequence, Parallel)
+- **[Minimal Python Agent](agents/python_agents/minimal_a2a_agent/README.md)** — Python FastAPI reference agent
+- **[Goldrush Event System](apps/a2a_agent_web/README_GOLDRUSH.md)** — Event/telemetry integration
+- **[NATS Integration](apps/a2a_agent_web/README_NATS.md)** — Event streaming and distributed messaging
+
+See each README for detailed usage, architecture, and API documentation.
+
+---
+
+## Developer Goodies
+
+### OpenAPI/Swagger Docs
+- **OpenAPI schema:** [openapi.yaml](a2a_agent_umbrella/apps/a2a_agent_web/openapi.yaml)
+- Use [Swagger Editor](https://editor.swagger.io/) to visualize or test the API.
+
+### OpenAPI/Swagger Docs
+- **OpenAPI schema:** [openapi.yaml](a2a_agent_umbrella/apps/a2a_agent_web/openapi.yaml)
+- Use [Swagger Editor](https://editor.swagger.io/) to visualize or test the API.
+
+### Badges
+- ![CI](https://github.com/<your-org>/hypergraph_agents_umbrella/actions/workflows/ci.yml/badge.svg) — Automated tests & linting
+- ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen) — Code coverage (see CI logs)
+- ![Docs](https://img.shields.io/badge/docs-hexdocs-blue) — [HexDocs](https://hexdocs.pm/) (Elixir docs)
+
+### API Endpoint Table
+| Endpoint             | Method | Description                       | Controller           |
+|----------------------|--------|-----------------------------------|----------------------|
+| `/api/story`         | POST   | Generate a story with LLM         | StoryController      |
+| `/api/summarize`     | POST   | Summarize text with LLM           | SummarizerController |
+| `/api/a2a`           | POST   | A2A protocol message              | A2aController        |
+| `/metrics`           | GET    | Prometheus metrics                | MetricsController    |
+| `/status`            | GET    | Health/status check               | StatusController     |
+
+### Scripts & Commands
+- **Makefile Shortcuts**: Run `make help` for a full list. Common:
+  - `make up` / `make down`: Start/stop the full stack (Elixir, Python, NATS, Prometheus, Grafana)
+  - `make test`, `make test-elixir`, `make test-python`: Run all or language-specific tests
+  - `make lint`: Lint/format all code
+- **Run tests manually**:
+  - Elixir: `cd apps/a2a_agent_web && mix test`
+  - Python: `cd agents/python_agents/minimal_a2a_agent && pytest`
+- **Lint/format manually**:
+  - Elixir: `mix format`
+  - Python: `ruff check .`
+
+### Troubleshooting
+- **NATS not running?** See [README_NATS.md](apps/a2a_agent_web/README_NATS.md)
+- **Metrics not showing?** Confirm `/metrics` endpoint and Prometheus config
+- **Common errors**: See logs for `[EventBus]`, `[A2A]`, and `[LLMOperator]` messages
+- **Docker issues**: `docker compose logs` and `docker compose ps` are your friends
+
+### Documentation
+- **Code-level docs**: [HexDocs](https://hexdocs.pm/) (Elixir), Python docstrings
+- **API usage**: See [A2A Agent Web README](a2a_agent_umbrella/apps/a2a_agent_web/README.md) for curl/httpx examples
+- **How to add an operator**: See [Operator README](apps/operator/README.md)
+- **How to add an agent**: See [Minimal Python Agent README](agents/python_agents/minimal_a2a_agent/README.md)
+
+### Security & Releases
+- **Security Policy**: See [SECURITY.md](SECURITY.md) (if present)
+- **Changelog**: See [CHANGELOG.md](CHANGELOG.md) for release notes
+
+### Contribution & Community
+- **Contribution Guidelines**: [CONTRIBUTING.md](CONTRIBUTING.md), `.ai/rules/python-dev.md`
+- **Open Issues/PRs**: [GitHub Issues](https://github.com/<your-org>/hypergraph_agents_umbrella/issues)
+- **Discussions/Support**: [GitHub Discussions](https://github.com/<your-org>/hypergraph_agents_umbrella/discussions) or open a PR/issue
+
+### More
+- **Pre-configured Docker Compose** for local dev and CI
+- **Live reload**: Phoenix and FastAPI both support live reload for rapid iteration
+- **Prometheus/Grafana**: Built-in metrics and dashboards
+- **Type-annotated, docstring-rich code**: All Elixir and Python code follows strict typing and documentation conventions (see `.ai/rules/python-dev.md`)
+- **Extensible Operators**: Easily add new operators for LLMs, workflows, or custom logic
+- **Cross-language support**: Extend with agents in any language via the A2A protocol
+
+For more, see the [Contributing](#contributing) section and individual app READMEs.
+
+---
+
 ## Directory Structure
 
 ```

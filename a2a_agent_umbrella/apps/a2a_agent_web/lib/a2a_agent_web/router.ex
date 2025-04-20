@@ -10,6 +10,8 @@ defmodule A2aAgentWeb.Router do
 
     get "/agent_card", AgentController, :agent_card
     post "/a2a", AgentController, :a2a
+    get "/openapi.yaml", OpenapiController, :spec
+    get "/swagger", SwaggerUiController, :index
   end
 
   # Enable Swoosh mailbox preview in development

@@ -1,6 +1,12 @@
 # Operator
 
-**TODO: Add description**
+This app implements the core operator library for the Ember-to-Elixir port. It includes:
+- LLMOperator (language model execution)
+- MapOperator (functional mapping)
+- SequenceOperator (chained execution)
+- ParallelOperator (parallel execution)
+
+Operators are the building blocks for agent workflows and orchestration.
 
 ## Installation
 

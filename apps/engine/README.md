@@ -1,6 +1,10 @@
 # Engine
 
-**TODO: Add description**
+This app implements the workflow execution engine (XCS) for Hypergraph Agents. It provides graph-based execution, topological sorting, and support for both parallel and sequential workflows.
+
+- Executes agent workflows as directed acyclic graphs (DAGs)
+- Supports dependency resolution and parallelization
+- Core to orchestrating complex agentic tasks
 
 ## Installation
 

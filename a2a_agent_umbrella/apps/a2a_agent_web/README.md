@@ -1,18 +1,20 @@
-# A2aAgentWeb
+# A2A Agent Web
 
-To start your Phoenix server:
+This is the Phoenix web/API app for the Hypergraph Agents umbrella. It exposes HTTP endpoints for agent orchestration, story generation, summarization, and A2A protocol operations.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server`
+## Key Endpoints
+- `POST /api/story` — Generate a story using an LLM (see StoryController)
+- `POST /api/summarize` — Summarize text using an LLM (see SummarizerController)
+- `POST /api/a2a` — Send A2A protocol messages (task requests, agent discovery, negotiation, etc.)
+- `GET /metrics` — Prometheus metrics endpoint
+- `GET /status` — Health/status check
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Development
+- Run `mix setup` to install dependencies
+- Start the Phoenix server with `mix phx.server`
+- Visit [localhost:4000](http://localhost:4000) for the API
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## Architecture
+- Integrates with the core agent and orchestrator apps
+- Implements workflow execution, event streaming (NATS), and observability
+- See the main [README](../../README.md) for full architecture
