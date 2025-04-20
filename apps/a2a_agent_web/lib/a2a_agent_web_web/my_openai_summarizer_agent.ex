@@ -4,7 +4,7 @@ defmodule A2aAgentWebWeb.MyOpenAISummarizerAgent do
   Implements before_node/4 for orchestration integration.
   """
   @openai_url "https://api.openai.com/v1/chat/completions"
-  @api_key System.get_env("OPENAI_API_KEY") || "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"
+  @api_key System.get_env("OPENAI_API_KEY")
 
   @doc """
   Adds a summary to the input by calling OpenAI GPT-4o.
