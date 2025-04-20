@@ -2,24 +2,54 @@
 
 This app is the orchestrator and workflow manager for agentic tasks in the Hypergraph Agents framework.
 
-- Coordinates execution of operators and agents
-- Manages workflow graphs and dependency resolution
-- Integrates with the Engine and Operator apps
+## Purpose
+- Coordinates execution of operators and agents across workflows
+- Manages workflow graphs, dependencies, and execution order
+- Integrates with Engine (XCS) for graph-based execution and Operator for computational units
 
-## Installation
+## Architecture & Features
+- **Orchestration:**
+  - Receives workflow/task requests (from API, agents, or external sources)
+  - Builds and manages workflow graphs (DAGs)
+  - Resolves dependencies and schedules execution
+- **Integration:**
+  - Delegates execution to Engine (XCS)
+  - Uses Operator app for LLM, Map, Sequence, Parallel, and custom operators
+  - Works with Agent Registry for agent discovery and assignment
+- **Extensible:**
+  - Add new orchestration strategies or workflow types in `lib/hypergraph_agent/`
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `hypergraph_agent` to your list of dependencies in `mix.exs`:
-
+## Example Orchestration Flow
 ```elixir
-def deps do
-  [
-    {:hypergraph_agent, "~> 0.1.0"}
+# Define a workflow graph (DAG)
+graph = %{
+  nodes: [
+    %{id: :input, op: :input},
+    %{id: :summarize, op: :llm, depends_on: [:input]},
+    %{id: :output, op: :output, depends_on: [:summarize]}
+  ],
+  edges: [
+    %{from: :input, to: :summarize},
+    %{from: :summarize, to: :output}
   ]
-end
+}
+
+# Orchestrate the workflow
+task_id = "task-123"
+result = HypergraphAgent.orchestrate(graph, agent_map, input, task_id: task_id)
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/hypergraph_agent>.
+## Extending the Orchestrator
+- Add new orchestration logic or workflow types in `lib/hypergraph_agent/`
+- Integrate with additional operator types or external agents
+- Implement custom scheduling, monitoring, or logging
+
+## Related Docs
+- [Engine App (XCS)](../engine/README.md)
+- [Operator App (Operators, Specs)](../operator/README.md)
+- [Umbrella README](../../a2a_agent_umbrella/README.md)
+
+---
+
+For architecture, usage, and API details, see the main [README](../../README.md).
 
