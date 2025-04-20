@@ -477,6 +477,70 @@ The A2A Agent Web app includes a robust, distributed agent registry and discover
 - Start the Phoenix server with `mix phx.server`
 - Visit [localhost:4000](http://localhost:4000) for the API
 
+## Mix Generators
+
+### Operator Generator: `mix a2a.gen.operator`
+
+The A2A Agent Web app includes a Mix generator to streamline the creation of new operator modules and their corresponding test files.
+
+**Usage:**
+
+```sh
+mix a2a.gen.operator MyNewOperator
+```
+
+This command will:
+- Create a new operator module at `lib/a2a_agent_web_web/operators/my_new_operator.ex` with a starter structure and documentation.
+- Automatically create a matching test file at `test/a2a_agent_web_web/operators/my_new_operator_test.exs` following ExUnit conventions.
+
+**Features:**
+- Ensures the operator module follows project conventions and implements the Operator protocol.
+- Provides a docstring and a basic implementation for quick onboarding.
+- The generated test file includes a starter test case to verify the operator's functionality.
+
+**Example:**
+
+```sh
+mix a2a.gen.operator ExampleOperator
+```
+
+This will generate:
+- `lib/a2a_agent_web_web/operators/example_operator.ex`
+- `test/a2a_agent_web_web/operators/example_operator_test.exs`
+
+Refer to the generated files for further customization and implementation details.
+
+---
+
+### Workflow Generator: `mix a2a.gen.workflow`
+
+The project also provides a Mix generator to create new workflow YAML files based on a starter template.
+
+**Usage:**
+
+```sh
+mix a2a.gen.workflow my_workflow
+```
+
+This command will:
+- Create a new workflow YAML file at `workflows/my_workflow.yaml` with a starter structure and helpful comments.
+
+**Features:**
+- Provides a commented template with sample nodes, edges, and parameters.
+- Ensures consistent structure for new workflows.
+
+**Example:**
+
+```sh
+mix a2a.gen.workflow summarize_and_analyze
+```
+
+This will generate:
+- `workflows/summarize_and_analyze.yaml`
+
+Refer to the generated YAML file for further customization and implementation details.
+
+
 ## Architecture
 - Integrates with the core agent and orchestrator apps
 - Implements workflow execution, event streaming (NATS), and observability
