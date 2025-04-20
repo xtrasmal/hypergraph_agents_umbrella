@@ -65,6 +65,31 @@ graph TD;
   B2 --> C[Join]
 ```
 
+## How Orchestration and Execution Work Together
+
+The Engine and HypergraphAgent work together to enable flexible, scalable agentic workflows:
+
+- **HypergraphAgent** acts as the **orchestrator** ("planner"). It builds workflow graphs (DAGs), decides which operators/agents to use, and manages high-level logic.
+- **Engine** is the **executor** ("runtime"). It takes the workflow graph from HypergraphAgent and efficiently executes it, handling dependencies and parallelism.
+
+**Analogy:**
+- HypergraphAgent is the conductor/planner; Engine is the orchestra/player.
+- HypergraphAgent decides *what* needs to be done and *how* to structure it; Engine handles *how* to run it efficiently.
+
+| Component        | Main Responsibility                | Knows About         | Doesn’t Know About           |
+|------------------|-----------------------------------|---------------------|------------------------------|
+| Engine           | Execute workflow graphs (DAGs)     | Task dependencies, execution order | Business logic, API, orchestration |
+| HypergraphAgent  | Build/orchestrate workflows        | Workflow logic, operator selection | Execution details, parallelism mechanics |
+
+**Typical Flow:**
+1. HypergraphAgent receives a high-level task (e.g., API request)
+2. It builds a workflow graph (DAG) and selects operators/agents
+3. It passes the graph to the Engine
+4. Engine executes the graph, handling dependencies and parallelism
+5. HypergraphAgent processes results or triggers further workflows
+
+---
+
 ## Related Docs
 - [Orchestrator App](../hypergraph_agent/README.md)
 - [Operator App](../operator/README.md)
