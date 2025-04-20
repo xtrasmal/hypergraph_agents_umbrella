@@ -59,7 +59,8 @@ defmodule A2aAgentWeb.MixProject do
       {:opentelemetry_phoenix, "~> 1.1"},
       {:goldrush, github: "jmanhype/goldrush", branch: "telemetry-plugins-integrated"},
       {:hypergraph_agent, in_umbrella: true},
-      {:gnat, "~> 1.5"} # NATS client for distributed event streaming
+      {:gnat, "~> 1.5"}, # NATS client for distributed event streaming
+      {:yaml_elixir, "~> 2.4"}
     ]
   end
 

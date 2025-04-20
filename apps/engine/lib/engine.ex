@@ -75,7 +75,7 @@ defmodule Engine do
               {:error, reason} -> raise "Input validation failed for node #{inspect(node)}: #{inspect(reason)}"
             end
         end
-      node_output = op.call(validated_input)
+      node_output = op.call(validated_input) |> unwrap_ok_and_wrap_map()
       _ =
         case spec do
           nil -> :ok
@@ -88,6 +88,14 @@ defmodule Engine do
       Map.put(acc, node, node_output)
     end)
   end
+
+  @doc """
+  Unwraps {:ok, value} to value, and wraps non-map values as %{result: value} for engine merging.
+  """
+  @spec unwrap_ok_and_wrap_map(any()) :: map()
+  defp unwrap_ok_and_wrap_map({:ok, value}), do: unwrap_ok_and_wrap_map(value)
+  defp unwrap_ok_and_wrap_map(map) when is_map(map), do: map
+  defp unwrap_ok_and_wrap_map(other), do: %{result: other}
 
   @doc """
   Executes the graph in parallel by levels (nodes with no dependencies run together).
@@ -114,7 +122,7 @@ defmodule Engine do
                   {:error, reason} -> raise "Input validation failed for node #{inspect(node)}: #{inspect(reason)}"
                 end
             end
-          node_output = op.call(validated_input)
+          node_output = op.call(validated_input) |> unwrap_ok_and_wrap_map()
           _ =
             case spec do
               nil -> :ok
