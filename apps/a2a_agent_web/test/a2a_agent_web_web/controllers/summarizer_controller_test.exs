@@ -10,7 +10,6 @@ defmodule A2aAgentWebWeb.SummarizerControllerTest do
   test "POST /api/summarize returns summary", %{conn: conn} do
     feedback = "The product is great but the delivery was slow."
     conn = post(conn, "/api/summarize", %{text: feedback})
-<<<<<<< HEAD
     summary = json_response(conn, 200)["summary"]
     assert is_binary(summary)
     assert String.length(summary) > 0
@@ -25,8 +24,5 @@ defmodule A2aAgentWebWeb.SummarizerControllerTest do
     story = json_response(conn, 200)["story"]
     assert is_binary(story)
     assert String.length(story) > 0
-=======
-    assert json_response(conn, 200)["summary"] =~ "product"
->>>>>>> 2eee8fe (feat: multi-agent orchestration, OpenAI summarizer agent, new endpoints, improved diagrams, and docs. Fixes, tests, and operator/agent extensibility.)
   end
 end

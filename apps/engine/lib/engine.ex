@@ -62,7 +62,10 @@ defmodule Engine do
       op = graph[node][:operator]
       spec = Map.get(graph[node], :specification)
       dep_outputs = Enum.map(graph[node][:deps], &acc[&1])
-      node_input = Map.merge(input, Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
+      node_params = Map.get(graph[node], :params, %{})
+      node_input =
+        node_params
+        |> Map.merge(Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
       validated_input =
         case spec do
           nil -> node_input
@@ -98,7 +101,10 @@ defmodule Engine do
           op = graph[node][:operator]
           spec = Map.get(graph[node], :specification)
           dep_outputs = Enum.map(graph[node][:deps], &acc[&1])
-          node_input = Map.merge(input, Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
+          node_params = Map.get(graph[node], :params, %{})
+          node_input =
+            node_params
+            |> Map.merge(Enum.reduce(dep_outputs, %{}, &Map.merge(&2, &1)))
           validated_input =
             case spec do
               nil -> node_input
