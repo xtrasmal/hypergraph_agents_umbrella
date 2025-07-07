@@ -193,7 +193,7 @@ The A2A Agent Web app includes a robust, distributed agent registry and discover
 
 **Key Features:**
 - **Aggregation/Reduction:** Applies a reducer function to a list of inputs and an initial value, producing a single aggregated result.
-- **Order Guarantee:** Explicitly reverses input list to ensure left-to-right reduction, matching Elixir convention and documentation.
+ - **Order Guarantee:** Processes inputs left-to-right using recursion to maintain the expected reduction order.
 - **Composable:** Can be used as a node in workflow graphs or combined with other operators for aggregation logic.
 - **Example Usage:** See inline doctest for practical usage.
 
