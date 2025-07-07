@@ -7,16 +7,16 @@ defmodule Operator do
   @callback call(map()) :: map()
 end
 
-# MapOperator: Applies a function to an input value and returns the result
+# MapOperator: Moves the value stored under "input" to "output" unchanged
 # Example usage: Operator.MapOperator.call(%{"input" => 42})
 defmodule Operator.MapOperator do
   @moduledoc """
-  Applies a function to an input value and returns the result.
+  Passes through the data from `"input"` to `"output"` without modification.
   """
   @behaviour Operator
 
   @doc """
-  Calls the map operator.
+  Moves `"input"` to `"output"` unchanged.
   """
   @impl true
   @spec call(map()) :: map()
