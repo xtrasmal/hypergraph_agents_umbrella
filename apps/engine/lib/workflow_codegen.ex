@@ -47,9 +47,14 @@ end
   # Generates the body of the run/1 function, respecting dependencies
   defp exec_function_body(nodes, edges) do
     order = topo_sort(nodes, edges)
-    Enum.map(order, fn node_id ->
-      "    { :ok, #{node_id}_out } = #{node_id}(input)"
-    end)
+    ["    state = input" |
+     Enum.flat_map(order, fn node_id ->
+       [
+         "    {:ok, #{node_id}_out} = #{node_id}(state)",
+         "    state = Map.merge(state, #{node_id}_out)"
+       ]
+     end) ++ ["    state"]
+    ]
     |> Enum.join("\n")
   end
 
