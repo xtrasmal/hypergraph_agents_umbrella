@@ -1,10 +1,10 @@
-defmodule A2AAgentWeb.WorkflowYAMELoaderTest do
+defmodule A2AAgentWeb.WorkflowYAMLLoaderTest do
   @moduledoc """
-  Tests for the WorkflowYAMELoader module, ensuring YAML workflows are parsed correctly.
+  Tests for the WorkflowYAMLLoader module, ensuring YAML workflows are parsed correctly.
   """
   use ExUnit.Case, async: true
 
-  import A2AAgentWeb.WorkflowYAMELoader
+  import A2AAgentWeb.WorkflowYAMLLoader
 
   @yaml_path "workflows/summarize_and_analyze.yaml"
 
