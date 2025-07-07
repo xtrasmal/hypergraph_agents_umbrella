@@ -29,7 +29,7 @@ defmodule Mix.Tasks.Workflow.Run do
 
     IO.puts("DEBUG: YAML path: #{yaml_path}")
     IO.puts("DEBUG: File.exists?: #{File.exists?(yaml_path)}")
-    case A2AAgentWeb.WorkflowYAMELoader.load(yaml_path) do
+    case A2AAgentWeb.WorkflowYAMLLoader.load(yaml_path) do
       {:ok, workflow} ->
         converted = convert_workflow(workflow)
         graph = workflow_to_graph(converted)

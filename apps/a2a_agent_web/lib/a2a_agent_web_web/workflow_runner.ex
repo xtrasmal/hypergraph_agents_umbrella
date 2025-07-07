@@ -10,7 +10,7 @@ defmodule A2AAgentWeb.WorkflowRunner do
       A2AAgentWeb.WorkflowRunner.run_exs("workflows/summarize_and_analyze.exs", %{"text" => "Elixir is awesome!"})
   """
 
-  alias A2AAgentWeb.WorkflowYAMELoader
+  alias A2AAgentWeb.WorkflowYAMLLoader
   # For Elixir macro DSL, no alias needed; Code.eval_file/1 returns the workflow structure
 
   @doc """
@@ -28,7 +28,7 @@ defmodule A2AAgentWeb.WorkflowRunner do
   """
   @spec run_yaml(String.t(), map(), module()) :: any()
   def run_yaml(yaml_path, input \\ %{}, engine \\ Engine) do
-    case WorkflowYAMELoader.load(yaml_path) do
+    case WorkflowYAMLLoader.load(yaml_path) do
       {:ok, %{:nodes => _nodes, :edges => _edges} = workflow} ->
         engine.run(workflow, input)
       {:ok, %{"nodes" => _nodes, "edges" => _edges} = workflow} ->

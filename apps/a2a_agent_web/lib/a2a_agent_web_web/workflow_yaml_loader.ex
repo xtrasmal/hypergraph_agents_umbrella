@@ -1,10 +1,10 @@
-defmodule A2AAgentWeb.WorkflowYAMELoader do
+defmodule A2AAgentWeb.WorkflowYAMLLoader do
   @moduledoc """
   Loads and parses workflow definitions from YAML files into the internal graph structure
   compatible with the XCS engine. Intended for use with workflows defined in the YAML DSL.
 
   Example usage:
-      {:ok, workflow} = A2AAgentWeb.WorkflowYAMELoader.load("workflows/summarize_and_analyze.yaml")
+      {:ok, workflow} = A2AAgentWeb.WorkflowYAMLLoader.load("workflows/summarize_and_analyze.yaml")
       # => %{nodes: [...], edges: [...]} (ready for XCS)
   """
 
